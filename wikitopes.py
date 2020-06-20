@@ -33,6 +33,9 @@ def parse_decay_mode(data):
     return [mode,BR]
     """
 
+    if data is np.nan:
+        return([np.nan,np.nan])
+
     # Drop trailing notation if present 
     dat = data.split(')')
     dat = dat[0].split('(')
