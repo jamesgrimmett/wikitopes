@@ -1,3 +1,4 @@
+import os
 import requests
 import numpy as np
 import pandas as pd
@@ -114,7 +115,11 @@ def get_isotope_table(html,el,keep_isomers=False):
     return df
 
 def main(elements = 'plutonium'):
-    elements = np.squeeze([elements])
+    if isinstance(elements,str):
+        elements = list([elements])
+    else:
+        elements = list(elements)
+
     frames = []
     for el in elements:
         url = urlbase + el
@@ -130,4 +135,6 @@ def main(elements = 'plutonium'):
 
 
 if __name__ == 'main':
-    main()
+    df = main()
+    output_dir = './isotopes.csv'
+    df.to_csv(output_loc)
