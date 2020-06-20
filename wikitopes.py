@@ -114,15 +114,17 @@ def get_isotope_table(html,el,keep_isomers=False):
     return df
 
 def main(elements = 'plutonium'):
-    elements = np.array([elements])
-    element_dict = {'plutonium': 'Pu'}
-
+    elements = np.squeeze([elements])
+    frames = []
     for el in elements:
         url = urlbase + el
         content = get_page_content(url)
         html = BeautifulSoup(content,'html.parser') 
-        df = get_isotope_table(html,el)
-        df = set_decay_and_branching(df)
+        df_ = get_isotope_table(html,el)
+        df_ = set_decay_and_branching(df_)
+        frames.append(df_)
+
+    df = pd.concat(frames)    
 
     return df
 
