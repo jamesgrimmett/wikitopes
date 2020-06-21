@@ -36,12 +36,16 @@ def parse_decay_mode(data):
     if data is np.nan:
         return([np.nan,np.nan])
 
+    data = data.replace('#','')
+    data = data.replace('?','')
     # Drop trailing notation if present 
     if '[' in data:
         dat = data.split('[')[0].strip(')')
     else:
         dat = data.split(')')
     dat = dat[0].split('(')
+    if dat[-1] == '':
+        dat = [dat[0]]
 
     # Decay mode should have channel, and branching percentage 
     # E.g. "EC (94%)" or just "EC". Assume 100% if percentage is not present.
@@ -78,8 +82,8 @@ def parse_decay_mode(data):
         dat[1] = 0.0
     elif '>' in dat[1] or '<' in dat[1]:
         dat[1] = np.round(float(dat[1].strip('>').strip('<')))
-    elif dat[1] == '#':
-        dat[1] = np.nan
+#    elif dat[1] == '#':
+#        dat[1] = np.nan
     else:
         dat[1] = float(dat[1]) 
 
