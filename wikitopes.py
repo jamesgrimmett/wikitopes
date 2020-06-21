@@ -144,7 +144,7 @@ def get_isotope_table(html,el,keep_isomers=False):
     
     return df
 
-def main(elements = 'plutonium'):
+def get(elements = 'plutonium'):
     if isinstance(elements,str):
         elements = list([elements])
     else:
@@ -165,6 +165,6 @@ def main(elements = 'plutonium'):
 
 
 if __name__ == 'main':
-    df = main()
+    df = get()
     output_dir = './isotopes.csv'
     df.to_csv(output_loc)
