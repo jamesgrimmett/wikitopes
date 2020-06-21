@@ -37,7 +37,10 @@ def parse_decay_mode(data):
         return([np.nan,np.nan])
 
     # Drop trailing notation if present 
-    dat = data.split(')')
+    if '[' in data:
+        dat = data.split('[')[0].strip(')')
+    else:
+        dat = data.split(')')
     dat = dat[0].split('(')
 
     # Decay mode should have channel, and branching percentage 
@@ -46,7 +49,8 @@ def parse_decay_mode(data):
         dat.append('100')
     elif len(dat) != 2:
         raise Exception('Unknown format in decay mode: {}'.format(dat))
-    dat[1] = dat[1].strip(')').strip('%')
+    # Stip extraneous characters (chr(126) is '~')
+    dat[1] = dat[1].strip(')').strip('%').strip(chr(126))
 
     # Covert percentage (string) to float.
     # Some percentages given in scientific notation.
@@ -57,8 +61,25 @@ def parse_decay_mode(data):
         # Negative sign '-' is chr(8722)
         power = float(num[1].split(chr(8722))[1])
         dat[1] = base * 10**-power 
+    # Sometimes 'x' is used instead of '×'
+    elif 'x' in dat[1]:
+        num = dat[1].split('x')
+        base = float(num[0])
+        # Negative sign '-' is chr(8722)
+        power = float(num[1].split(chr(8722))[1])
+        dat[1] = base * 10**-power 
+    # Sometimes the base and '×'/'x' is omitted 
+    elif chr(8722) in dat[1]:
+        base = 1.0
+        # Negative sign '-' is chr(8722)
+        power = float(dat[1].split(chr(8722))[1])
+        dat[1] = base * 10**-power 
     elif 'rare' in dat[1]:
         dat[1] = 0.0
+    elif '>' in dat[1] or '<' in dat[1]:
+        dat[1] = np.round(float(dat[1].strip('>').strip('<')))
+    elif dat[1] == '#':
+        dat[1] = np.nan
     else:
         dat[1] = float(dat[1]) 
 
@@ -109,6 +130,8 @@ def get_isotope_table(html,el,keep_isomers=False):
         # Check that rows match in Z and N before dropping
         if (df.Z.notna() == df.Z.notna()).all():
             df = df[df.Z.notna()]
+            df.Z = df.Z.astype('int')
+            df.N = df.N.astype('int')
         else:
             raise Exception('Unexpected missing data in Z or N column.')
 
