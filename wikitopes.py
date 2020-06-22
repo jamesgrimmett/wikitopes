@@ -144,7 +144,7 @@ def get_isotope_table(html,el,keep_isomers=False):
     
     return df
 
-def get(elements = 'plutonium'):
+def get(elements = 'plutonium', raw_decay_mode = False):
     if isinstance(elements,str):
         elements = list([elements])
     else:
@@ -155,8 +155,9 @@ def get(elements = 'plutonium'):
         url = urlbase + el
         content = get_page_content(url)
         html = BeautifulSoup(content,'html.parser') 
-        df_ = get_isotope_table(html,el)
-        df_ = set_decay_and_branching(df_)
+        df_ = get_isotope_table(html = html, el = el)
+        if raw_decay_mode is False:
+            df_ = set_decay_and_branching(df_)
         frames.append(df_)
 
     df = pd.concat(frames)    
