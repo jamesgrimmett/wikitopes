@@ -7,7 +7,7 @@ Usage
 
 ```python
 >>> import wikitopes
->>> df = wikitopes.main('plutonium')
+>>> df = wikitopes.get('plutonium')
 >>> df.head()
   nuclide     Z      N  ... daughter_isotope spin-parity branching_ratio
 0   228Pu  94.0  134.0  ...             224U          0+           0.999
@@ -23,7 +23,7 @@ You can pass a list of elements:
 
 ```python
 >>> import wikitopes
->>> df = wikitopes.main(['zinc','plutonium'])
+>>> df = wikitopes.get(['zinc','plutonium'])
 >>> df
    nuclide     Z      N  ... daughter_isotope spin-parity branching_ratio
 0     54Zn  30.0   24.0  ...             52Ni          0+    1.000000e+00
