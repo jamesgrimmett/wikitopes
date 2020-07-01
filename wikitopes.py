@@ -116,7 +116,10 @@ def get_isotope_table(html,el,keep_isomers=False):
                 'half_life','decay_mode','daughter_isotope',
                     'spin-parity']
     df = pd.read_html(str(tables[1]))[0]
-
+    
+    # Drop "historic name" column (e.g. lead table)
+    if df.columns[1] == ('Historicname', 'Historicname'):
+        df.drop(df.columns[1], axis = 1, inplace = True)
     # Table should have at least 8 columns, as listed above.
     if len(df.columns) < 8:
         print('Columns for {}:'.format(el))
