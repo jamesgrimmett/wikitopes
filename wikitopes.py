@@ -168,7 +168,7 @@ def get(elements = 'plutonium', raw_decay_mode = False):
     return df
 
 
-if __name__ == 'main':
+if __name__ == '__main__':
     df = get()
     output_dir = './isotopes.csv'
     df.to_csv(output_loc)
